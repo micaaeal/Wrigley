@@ -4,6 +4,7 @@ package
 	 * @author Theprit
 	 */
 	
+	import codegears.BorderMovieClip;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
@@ -30,6 +31,7 @@ package
 	
 	public final class Main extends Sprite
 	{
+		private var borderMC:BorderMovieClip;
 		//Camera
 		protected var _detectCambuff:BitmapData;
 		
@@ -59,13 +61,18 @@ package
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		public function Main()
 		{			
-			if(stage) init();
-			else addEventListener(Event.ADDED_TO_STAGE, init);
+			if (stage) {
+				init();
+			} else {
+				addEventListener(Event.ADDED_TO_STAGE, init);
+			}
 		}
 		
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		protected function init():void
 		{
+			borderMC = new BorderMovieClip();
+			//pon.setWigleyListener(borderMC);
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
 			initCamera(640, 480, 25);

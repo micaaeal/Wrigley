@@ -148,6 +148,7 @@ package
 				//Detecting face
 				var stage:uint = detectFace.processHaarcascade();
 				
+				//Send an image to server
 				jpegSender.sendMessage(_cambuff);
 				
 				//Cut server connection

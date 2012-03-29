@@ -72,10 +72,12 @@ package
 		protected function init():void
 		{
 			borderMC = new BorderMovieClip();
+			addEventListener(Event.ENTER_FRAME, borderMC.onUpdate);
+			this.addChild(borderMC);
 			//pon.setWigleyListener(borderMC);
 			removeEventListener(Event.ADDED_TO_STAGE, init);
 			
-			initCamera(640, 480, 25);
+			initCamera(320, 240, 25);
 			
 			outline = new Shape();
 			myview.addChild(outline);

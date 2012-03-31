@@ -10,8 +10,12 @@ package
 	import flash.display.Graphics;
 	import flash.display.Shape;
 	import flash.display.Sprite;
+	import flash.net.URLRequest;	
+	import flash.display.Loader;
 	import flash.media.Camera;
 	import flash.media.Video;
+	import flash.system.ApplicationDomain;
+	import flash.system.LoaderContext;
 	
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
@@ -31,6 +35,7 @@ package
 	
 	public final class Main extends Sprite
 	{
+			
 		private var borderMC:BorderMovieClip;
 		//Camera
 		protected var _detectCambuff:BitmapData;
@@ -61,11 +66,20 @@ package
 		//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		public function Main()
 		{			
+			//---- Load External SWF ----//
+			var path:URLRequest = new URLRequest("Resources.swf");
+			var context:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,onSWFLoadComplete);
+			loader.load(path,context);
+		}
+		
+		public function onSWFLoadComplete(event:Event):void {
 			if (stage) {
 				init();
 			} else {
 				addEventListener(Event.ADDED_TO_STAGE, init);
-			}
+			}			
 		}
 		
 	//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

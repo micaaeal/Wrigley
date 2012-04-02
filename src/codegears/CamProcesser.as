@@ -31,7 +31,8 @@ package codegears
 	import codegears.BorderMovieClip;
 	import codegears.WigleyCameraListener;
 	
-	public class CamProcesser extends MovieClip
+	
+	public class CamProcesser extends MovieClip implements WigleyBorderListenner
 	{
 		//Camera
 		protected var _detectCambuff:BitmapData;
@@ -57,7 +58,7 @@ package codegears
 		public var recoder:FLVToServerSteaming;
 		public var jpegSender:JpegToServerManager;
 		
-		private var border:WigleyCameraListener;
+		private var borderListenner:WigleyCameraListener;
 		
 		public var lastTime:Number;
 		
@@ -91,9 +92,22 @@ package codegears
 			lastTime = getTimer();
 		}
 		//**********************************************************************************************************
-		public function setWigleyListener(invorker:WigleyCameraListener):void {
-			border = invorker;
+		public function setWigleyListener(_borderListenner:WigleyCameraListener):void {
+			borderListenner = _borderListenner;
 		}
+		
+		public function onStop():void {
+			demoStage = -1;
+			
+			recoder.Disconnect();
+		}
+		
+		public function onRestart():void {
+			if (demoStage > 0) onStop();
+			
+			demoStage = 0;
+		}
+		
 		//**********************************************************************************************************
 		
 		public function updateFrame(e:Event):void
@@ -114,7 +128,7 @@ package codegears
 			
 			if ( demoStage == 0) {
 				//Stage with to detect object
-				
+				borderListenner.onStart();
 				
 				g.clear();
 				g.lineStyle(1, 0xff0000);
@@ -137,6 +151,7 @@ package codegears
 				recoder.Connect();
 				
 				demoStage = 2;
+				borderListenner.onBoxDetect();
 			}
 			else if (demoStage == 2) {
 				//This stage do detect face, month , game logic and connecting to server
@@ -144,13 +159,16 @@ package codegears
 				//Detecting face
 				var stage:uint = detectFace.processHaarcascade();
 				
+				if ( stage >= 4 ) borderListenner.onMouthMove();
+				else borderListenner.onMouthStop();
+				
 				//Send an image to server
-				jpegSender.sendMessage(_cambuff);
+				//jpegSender.sendMessage(_cambuff);
 				
 				//Cut server connection
-				if (stage == 0) {
-					recoder.Disconnect();
-				}
+				//if (stage == 0) {
+				//	recoder.Disconnect();
+				//}
 			}
 		}
 		

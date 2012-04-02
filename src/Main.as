@@ -4,6 +4,10 @@ package
 	 * @author Theprit
 	 */
 	import flash.display.Sprite;
+	import flash.net.URLRequest;	
+	import flash.display.Loader;
+	import flash.system.ApplicationDomain;
+	import flash.system.LoaderContext;
 	import flash.events.Event;
 	
 	import codegears.CamProcesser;
@@ -20,7 +24,17 @@ package
 		private var borderMC:BorderMovieClip;
 		//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 		public function Main()
-		{	
+		{
+			//---- Load External SWF ----//
+			var path:URLRequest = new URLRequest("Resources.swf");
+			var context:LoaderContext = new LoaderContext(false, ApplicationDomain.currentDomain);
+			var loader:Loader = new Loader();
+			loader.contentLoaderInfo.addEventListener(Event.COMPLETE,onSWFLoadComplete);
+			loader.load(path,context);
+		}
+		
+		public function onSWFLoadComplete(event:Event):void 
+		{
 			borderMC = new BorderMovieClip();
 			addEventListener(Event.ENTER_FRAME, borderMC.onUpdate);
 			this.addChild(borderMC);
@@ -31,5 +45,6 @@ package
 			this.addChild(camprocesser);
 			camprocesser.setWigleyListener(borderMC);
 		}
+		
 	}
 }

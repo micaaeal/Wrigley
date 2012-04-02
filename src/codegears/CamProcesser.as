@@ -4,15 +4,17 @@ package codegears
 	 * ...
 	 * @author Theprit
 	 */
+	import flash.display.MovieClip;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import flash.display.Shape;
-	import flash.display.Sprite;
+	
 	import flash.media.Camera;
 	import flash.media.Video;
 	
 	import flash.geom.Point;
+	import flash.display.Sprite;
 	import flash.geom.Rectangle;
 	
 	import flash.events.Event;
@@ -26,7 +28,10 @@ package codegears
 	import codegears.imageprocess.FLVToServerSteaming;
 	import codegears.imageprocess.JpegToServerManager;
 	
-	public class CamProcesser 
+	import codegears.BorderMovieClip;
+	import codegears.WigleyCameraListener;
+	
+	public class CamProcesser extends MovieClip
 	{
 		//Camera
 		protected var _detectCambuff:BitmapData;
@@ -52,11 +57,26 @@ package codegears
 		public var recoder:FLVToServerSteaming;
 		public var jpegSender:JpegToServerManager;
 		
+		private var border:WigleyCameraListener;
+		
 		public var lastTime:Number;
 		
-		public function CamProcesser(camRect:Rectangle, frameRate:int) 
+		public function CamProcesser(camRect:Rectangle, fps:int) 
 		{
-			initCamera(camRect.width, camRect.height, frameRate);
+			_cambuff = new BitmapData( camRect.width, camRect.height, false, 0x0 );
+            _cam = Camera.getCamera();
+            _cam.setMode( camRect.width, camRect.height, fps, true );
+
+			//_cambuff_rect = _cambuff.rect;
+			//_cam_mtx = new Matrix(-1, 0, 0, 1, w);
+            
+            _video = new Video( _cam.width, _cam.height );
+            _video.attachCamera( _cam );
+			
+			camBmp = new Bitmap(_cambuff); 
+			myview = new Sprite();
+			addChild(myview);
+			myview.addChild( camBmp );
 			
 			outline = new Shape();
 			myview.addChild(outline);
@@ -69,32 +89,14 @@ package codegears
 			jpegSender = new JpegToServerManager();
 			
 			lastTime = getTimer();
-			addEventListener(Event.ENTER_FRAME, updateFrame);
 		}
-		
+		//**********************************************************************************************************
+		public function setWigleyListener(invorker:WigleyCameraListener):void {
+			border = invorker;
+		}
 		//**********************************************************************************************************
 		
-		protected function initCamera(w:int = 640, h:int = 480, fps:int = 20):void
-		{
-			_cambuff = new BitmapData( w, h, false, 0x0 );
-            _cam = Camera.getCamera();
-            _cam.setMode( w, h, fps, true );
-
-			//_cambuff_rect = _cambuff.rect;
-			//_cam_mtx = new Matrix(-1, 0, 0, 1, w);
-            
-            _video = new Video( _cam.width, _cam.height );
-            _video.attachCamera( _cam );
-			
-			camBmp = new Bitmap(_cambuff); 
-			myview = new Sprite();
-			addChild(myview);
-			myview.addChild( camBmp );
-		}
-		
-		//**********************************************************************************************************
-		
-		protected function updateFrame(e:Event):void
+		public function updateFrame(e:Event):void
 		{
 			var startTime:Number = getTimer();
 			var elapedTime:Number = (startTime - lastTime) / 1000;
@@ -104,9 +106,15 @@ package codegears
 			
 			var g:Graphics = outline.graphics;
 			g.clear();
-				
+			
+			//demoStage describe
+			// 0 detect object
+			// 1 found object, start stream
+			// 2 detect face, mouth move
+			
 			if ( demoStage == 0) {
 				//Stage with to detect object
+				
 				
 				g.clear();
 				g.lineStyle(1, 0xff0000);

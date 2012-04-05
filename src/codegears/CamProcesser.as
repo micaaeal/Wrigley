@@ -49,7 +49,7 @@ package codegears
 		protected var outline:Shape;
 		
 		//Demo varliable
-		public var objectDetectRect:Rectangle = new Rectangle(84, 280, 186, 144);
+		public var objectDetectRect:Rectangle = new Rectangle(90, 90, 186, 144);
 		private var demoStage:Number = 0; //0:Begin 1:PlaceFinish 2:DetectFace 3:DetectSpeak
 		
 		public var detectObject:ObjectDetecter;

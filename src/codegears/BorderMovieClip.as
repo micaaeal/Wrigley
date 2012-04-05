@@ -4,9 +4,11 @@ package codegears
 	import codegears.util.CodeGearsTimer;
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import Resources.AllTimeMC;
 	import Resources.TimeProgress;
-	import Resources.TodayTimeMC;
+	import Resources.*;
 	
 	/**
 	 * ...
@@ -20,13 +22,23 @@ package codegears
 		private var allTime:AllTimeMC;
 		private var timeProgress:TimeProgress;
 		private var progressBar:ProgressBar;
-		
+		private var backG:BackGroundMC;
+		private var head:hearBarMc;
+		private var body:bodyBarMc;
+		private var tail:tailBarMc;
+		private var bg:bgBarMc;
 		
 		public function BorderMovieClip() {
 			timer = new CodeGearsTimer();
 			timer.start();
+			
+			/*backG = new BackGroundMC();
+			backG.x = -20;
+			backG.y = 0;
+			this.addChild(backG);*/
+			
 			movie = new MovieClip();
-			movie.graphics.beginFill(0xFFFF00);
+			movie.graphics.beginFill(0x7190b3);
 			movie.graphics.drawRect(0, 0, 240, 180);
 			movie.graphics.endFill();
 			movie.x = 390;
@@ -40,26 +52,35 @@ package codegears
 			allTime.y = 400;
 			this.addChild(allTime);
 			timeProgress = new TimeProgress();
-			timeProgress.y = 400;
+			timeProgress.y = 380;
 			this.addChild(timeProgress);
-			var bg:MovieClip = new MovieClip();
+			head = new hearBarMc() ;
+			body = new bodyBarMc();
+			tail = new tailBarMc();
+			bg = new bgBarMc();
+			/*var bg:MovieClip = new MovieClip();
+			//bg.graphics.beginBitmapFill(bitmapdata, null, true, false);
 			bg.graphics.beginFill(0xFFFF00);
-			bg.graphics.drawRect(0, 0, 400, 10);
+			bg.graphics.drawRect(0, 0, 380, 10);
 			bg.graphics.endFill();			
-			var head:MovieClip = new MovieClip();
+			
+			
 			head.graphics.beginFill(0xFF00FF);
 			head.graphics.drawRect(0, 0, 10, 10);
-			head.graphics.endFill();			
+			head.graphics.endFill();		
 			var body:MovieClip = new MovieClip();
+			
 			body.graphics.beginFill(0xFF0000);
 			body.graphics.drawRect(0, 0, 10, 10);
 			body.graphics.endFill();			
 			var tail:MovieClip = new MovieClip();
+			
 			tail.graphics.beginFill(0x00FF00);
 			tail.graphics.drawRect(0, 0, 10, 10);
-			tail.graphics.endFill();			
+			tail.graphics.endFill();		*/	
+			
 			progressBar = new ProgressBar(bg, head, body, tail);
-			progressBar.y = 450;
+			progressBar.y = 445;
 			progressBar.setProgress(0.5);
 			this.addChild(progressBar);
 		}

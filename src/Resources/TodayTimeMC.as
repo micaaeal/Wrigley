@@ -18,6 +18,7 @@
 			timeText.text = TimeUtil.getTimeText(time);
 		}
 		
+				
 	}
 	
 }
